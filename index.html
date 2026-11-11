@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -12,31 +11,30 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Tailwind Config for Custom Colors -->
+    <!-- Tailwind Config for Custom Colors (ตั้งค่าก่อนโหลด Tailwind เพื่อให้สีไม่เพี้ยน) -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'honeydew': '#F6FFEA',
-                        'soft-peach': '#FFDE96',
-                        'coral-glow': '#FA855A',
-                        'tomato-jam': '#C93638',
-                        'sky-blue': '#62C4DA',
-                    },
-                    fontFamily: {
-                        sans: ['"Noto Sans Thai"', 'sans-serif'],
+        tailwind = {
+            config: {
+                theme: {
+                    extend: {
+                        colors: {
+                            'honeydew': '#F6FFEA',
+                            'soft-peach': '#FFDE96',
+                            'coral-glow': '#FA855A',
+                            'tomato-jam': '#C93638',
+                            'sky-blue': '#62C4DA',
+                        },
+                        fontFamily: {
+                            sans: ['"Noto Sans Thai"', 'sans-serif'],
+                        }
                     }
                 }
             }
         }
     </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         /* Global Styles & Variables */
@@ -413,4 +411,1065 @@
             <div class="flex items-center gap-3 text-coral-glow font-bold text-xl">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-soft-peach to-coral-glow flex items-center justify-center text-white shadow-lg shadow-coral-glow/30">
                     <i class="fas fa-wallet"></i>
-                <
+                </div>
+                BudgetPlan
+            </div>
+            <button class="lg:hidden text-gray-500 hover:text-coral-glow" onclick="toggleSidebar()">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
+            <a href="#" onclick="switchTab('dashboard')" class="nav-item active flex items-center gap-4 px-4 py-3 text-gray-600 font-medium">
+                <i class="fas fa-home text-sky-blue text-lg w-5 text-center"></i>
+                ภาพรวมการเงิน
+            </a>
+            <a href="#" onclick="switchTab('income')" class="nav-item flex items-center gap-4 px-4 py-3 text-gray-600 font-medium">
+                <i class="fas fa-arrow-down text-sky-blue text-lg w-5 text-center"></i>
+                รายรับ
+            </a>
+            <a href="#" onclick="switchTab('expenses')" class="nav-item flex items-center gap-4 px-4 py-3 text-gray-600 font-medium">
+                <i class="fas fa-arrow-up text-sky-blue text-lg w-5 text-center"></i>
+                รายจ่าย
+            </a>
+            <a href="#" onclick="switchTab('bills')" class="nav-item flex items-center gap-4 px-4 py-3 text-gray-600 font-medium">
+                <i class="fas fa-file-invoice-dollar text-sky-blue text-lg w-5 text-center"></i>
+                บิลและค่าใช้จ่าย
+            </a>
+            <a href="#" onclick="switchTab('savings')" class="nav-item flex items-center gap-4 px-4 py-3 text-gray-600 font-medium">
+                <i class="fas fa-piggy-bank text-sky-blue text-lg w-5 text-center"></i>
+                เงินออม
+            </a>
+            <a href="#" onclick="switchTab('debts')" class="nav-item flex items-center gap-4 px-4 py-3 text-gray-600 font-medium">
+                <i class="fas fa-credit-card text-sky-blue text-lg w-5 text-center"></i>
+                หนี้สิน
+            </a>
+            <a href="#" onclick="switchTab('allocation')" class="nav-item flex items-center gap-4 px-4 py-3 text-gray-600 font-medium">
+                <i class="fas fa-chart-pie text-sky-blue text-lg w-5 text-center"></i>
+                จัดสรรงบประมาณ
+            </a>
+            <a href="#" onclick="switchTab('transactions')" class="nav-item flex items-center gap-4 px-4 py-3 text-gray-600 font-medium">
+                <i class="fas fa-list-ul text-sky-blue text-lg w-5 text-center"></i>
+                รายการธุรกรรมทั้งหมด
+            </a>
+            
+            <!-- ตัวละครตกแต่ง Sidebar -->
+            <div class="mt-8 flex justify-center pb-6">
+                <div class="w-20 h-20 anim-sway opacity-90">
+                    <svg class="w-full h-full"><use href="#mascot-love"></use></svg>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        
+        <!-- Header -->
+        <header class="h-20 shrink-0 flex items-center justify-between px-4 lg:px-10 z-30">
+            <div class="flex items-center gap-3 sm:gap-4 relative">
+                <button class="lg:hidden text-gray-600 hover:text-coral-glow p-2 -ml-2" onclick="toggleSidebar()">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                
+                <!-- ตัวละครตกแต่ง Header -->
+                <div class="w-12 h-12 md:w-16 md:h-16 anim-float hidden sm:block">
+                    <svg class="w-full h-full"><use href="#mascot-main"></use></svg>
+                </div>
+                
+                <div>
+                    <h1 id="pageTitle" class="text-xl md:text-2xl font-bold text-gray-800">ภาพรวมการเงิน</h1>
+                    <p class="text-xs sm:text-sm text-gray-500">จัดการงบประมาณของคุณ (฿)</p>
+                </div>
+                
+                <!-- ประกายดาวตกแต่ง (Decoration) -->
+                <div class="absolute -top-2 -right-4 w-5 h-5 text-soft-peach anim-float-delay hidden sm:block">
+                    <svg class="w-full h-full"><use href="#icon-sparkle"></use></svg>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-4">
+                <!-- Month/Year Selector -->
+                <div class="glass-card flex items-center px-2 sm:px-4 py-2 gap-1 sm:gap-3 border-none !shadow-sm">
+                    <button class="text-gray-400 hover:text-sky-blue p-1 sm:p-2" onclick="document.getElementById('monthSelector').stepDown(); updateData();"><i class="fas fa-chevron-left"></i></button>
+                    <input type="month" id="monthSelector" class="bg-transparent border-none text-gray-700 font-medium text-sm sm:text-base focus:outline-none cursor-pointer w-[110px] sm:w-auto" onchange="updateData()">
+                    <button class="text-gray-400 hover:text-sky-blue p-1 sm:p-2" onclick="document.getElementById('monthSelector').stepUp(); updateData();"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
+                <!-- Global Add Button -->
+                <button onclick="openModal()" class="btn-glossy px-4 sm:px-6 py-2.5 sm:py-3 font-semibold flex items-center gap-2 text-sm sm:text-base">
+                    <i class="fas fa-plus"></i>
+                    <span class="hidden md:inline">เพิ่มรายการ</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <div class="flex-1 overflow-y-auto px-4 lg:px-10 pb-24 lg:pb-10 relative" id="contentArea">
+            
+            <!-- ของตกแต่งพื้นหลังลอยๆ (Background Decorations) -->
+            <div class="absolute top-10 left-10 w-16 h-16 text-sky-blue opacity-20 anim-float pointer-events-none hidden md:block">
+                <svg class="w-full h-full"><use href="#icon-cloud"></use></svg>
+            </div>
+            <div class="absolute top-40 right-20 w-8 h-8 text-soft-peach opacity-40 anim-float-delay pointer-events-none hidden md:block">
+                <svg class="w-full h-full"><use href="#icon-sparkle"></use></svg>
+            </div>
+            <div class="absolute bottom-20 left-1/4 w-12 h-12 text-coral-glow opacity-20 anim-sway pointer-events-none hidden lg:block">
+                <svg class="w-full h-full"><use href="#icon-cloud"></use></svg>
+            </div>
+            
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="tab-content space-y-4 sm:space-y-6">
+                <!-- Previous Balance Input -->
+                <div class="flex justify-end mb-2">
+                    <div class="flex items-center gap-2 text-sm text-gray-600 bg-white/50 px-3 py-1.5 rounded-lg">
+                        <label for="prevBalance">ยอดยกมาจากเดือนก่อน:</label>
+                        <input type="number" id="prevBalance" class="w-24 bg-transparent border-b border-gray-300 focus:outline-none focus:border-coral-glow text-right font-medium text-sky-blue" value="0" onchange="updateData()">
+                        <span>฿</span>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
+                    <!-- Left to Spend -->
+                    <div class="glass-card p-6 border-t-4 border-t-sky-blue relative">
+                        <!-- ตัวละครตกแต่งกล่องคงเหลือ -->
+                        <div class="absolute -top-6 right-4 w-16 h-16 anim-float z-20 drop-shadow-md">
+                            <svg class="w-full h-full"><use href="#mascot-cheer"></use></svg>
+                        </div>
+                        <div class="absolute top-3 right-20 w-8 h-8 text-sky-blue opacity-50 anim-float-delay">
+                            <svg class="w-full h-full"><use href="#icon-sparkle"></use></svg>
+                        </div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium mb-1">เงินคงเหลือใช้จ่ายได้</p>
+                                <h3 class="text-3xl font-bold text-sky-blue" id="dash-left">฿0.00</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-sky-blue/20 flex items-center justify-center text-sky-blue text-xl">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Income -->
+                    <div class="glass-card p-6 border-t-4 border-t-soft-peach relative">
+                        <div class="absolute bottom-2 right-12 w-6 h-6 text-soft-peach opacity-60 anim-float-delay">
+                            <svg class="w-full h-full"><use href="#icon-sparkle"></use></svg>
+                        </div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium mb-1">รายรับทั้งหมด (Actual)</p>
+                                <h3 class="text-2xl font-bold text-gray-800" id="dash-income">฿0.00</h3>
+                                <p class="text-xs text-gray-400 mt-1">งบ: <span id="dash-income-budget">฿0.00</span></p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-soft-peach/40 flex items-center justify-center text-orange-500 text-lg">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expenses -->
+                    <div class="glass-card p-6 border-t-4 border-t-coral-glow relative">
+                        <div class="absolute top-1/2 right-4 w-12 h-12 text-coral-glow opacity-10 anim-sway">
+                            <svg class="w-full h-full"><use href="#icon-cloud"></use></svg>
+                        </div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium mb-1">รายจ่ายทั้งหมด (Actual)</p>
+                                <h3 class="text-2xl font-bold text-gray-800" id="dash-expense">฿0.00</h3>
+                                <p class="text-xs text-gray-400 mt-1">งบ: <span id="dash-expense-budget">฿0.00</span></p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-coral-glow/20 flex items-center justify-center text-coral-glow text-lg">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bills -->
+                    <div class="glass-card p-6 relative overflow-hidden">
+                        <div class="absolute -bottom-4 -right-4 w-20 h-20 text-sky-blue opacity-10 anim-sway pointer-events-none">
+                            <svg class="w-full h-full"><use href="#illus-bill"></use></svg>
+                        </div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium mb-1">ค่าบิลและประจำ</p>
+                                <h3 class="text-xl font-bold text-gray-700" id="dash-bill">฿0.00</h3>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-sky-blue/20 flex items-center justify-center text-sky-blue">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Savings -->
+                    <div class="glass-card p-6 relative overflow-visible">
+                        <!-- น้อง Budgee แอบดู -->
+                        <div class="absolute -top-7 right-6 w-14 h-14 anim-pop z-0">
+                            <svg class="w-full h-full"><use href="#mascot-peek"></use></svg>
+                        </div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium mb-1">เงินออม</p>
+                                <h3 class="text-xl font-bold text-gray-700" id="dash-saving">฿0.00</h3>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-honeydew flex items-center justify-center text-sky-blue border border-soft-peach">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Debts -->
+                    <div class="glass-card p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium mb-1">หนี้สินที่ชำระ</p>
+                                <h3 class="text-xl font-bold text-gray-700" id="dash-debt">฿0.00</h3>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-tomato-jam/20 flex items-center justify-center text-tomato-jam">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-6">
+                    <!-- Cashflow -->
+                    <div class="glass-card p-4 sm:p-6 flex flex-col items-center relative">
+                        <!-- ประกายดาวหัวข้อกราฟ -->
+                        <div class="absolute top-4 right-4 w-6 h-6 text-soft-peach anim-float-delay">
+                            <svg class="w-full h-full"><use href="#icon-sparkle"></use></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-700 mb-4 w-full text-left">กระแสเงินสด (Cashflow)</h3>
+                        <div class="relative w-full h-56 sm:h-64 lg:h-72">
+                            <canvas id="cashflowChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Expense Breakdown -->
+                    <div class="glass-card p-4 sm:p-6 flex flex-col items-center">
+                        <h3 class="text-lg font-bold text-gray-700 mb-4 w-full text-left">สัดส่วนรายจ่าย</h3>
+                        <div class="relative w-full h-56 sm:h-64 lg:h-72">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Actual vs Budget Bar Chart -->
+                    <div class="glass-card p-4 sm:p-6 md:col-span-2 relative">
+                        <!-- น้อง Budgee แอบดูมุมกราฟ -->
+                        <div class="absolute bottom-4 right-4 w-12 h-12 anim-sway opacity-80 pointer-events-none hidden sm:block">
+                            <svg class="w-full h-full"><use href="#mascot-peek"></use></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-700 mb-4">เปรียบเทียบยอดจริง vs งบประมาณ</h3>
+                        <div class="relative w-full h-64 sm:h-72">
+                            <canvas id="budgetBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: GENERIC TABLE (Income, Expenses, Bills, Savings, Debts) -->
+            <!-- We will use a shared template updated via JS, but for structure, we create containers -->
+            <div id="view-generic" class="tab-content hidden glass-card p-6 min-h-[500px] relative">
+                
+                <!-- พื้นหลังก้อนเมฆตกแต่ง -->
+                <div class="absolute top-10 right-10 w-24 h-24 text-sky-blue opacity-10 anim-float hidden md:block z-0 pointer-events-none">
+                    <svg class="w-full h-full"><use href="#icon-cloud"></use></svg>
+                </div>
+                
+                <div class="flex justify-between items-center mb-6 relative z-10">
+                    <div class="flex items-center gap-4">
+                        <!-- กล่องแสดงภาพประกอบประจำหมวดหมู่ -->
+                        <div class="w-14 h-14 anim-pop hidden sm:flex">
+                            <svg class="w-full h-full" id="generic-illus"><use href="#illus-income"></use></svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-700" id="generic-title">รายการ</h2>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm">
+                        <div class="bg-white/50 px-4 py-2 rounded-lg text-gray-600">
+                            ยอดจริง: <span id="generic-actual-total" class="font-bold text-coral-glow">฿0.00</span>
+                        </div>
+                        <div class="bg-white/50 px-4 py-2 rounded-lg text-gray-600">
+                            งบประมาณ: <span id="generic-budget-total" class="font-bold text-sky-blue">฿0.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
+                        <thead class="text-xs uppercase bg-coral-glow/10 rounded-t-lg">
+                            <tr id="generic-table-head">
+                                <!-- JS will populate headers -->
+                            </tr>
+                        </thead>
+                        <tbody id="generic-table-body" class="divide-y divide-gray-100/50">
+                            <!-- JS will populate rows -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Empty State (ตัวละครน้อง Budgee นอนหลับ) -->
+                <div id="generic-empty" class="text-center py-16 text-gray-400 hidden flex flex-col items-center justify-center">
+                    <div class="w-32 h-32 mb-4 anim-float opacity-80">
+                        <svg class="w-full h-full"><use href="#mascot-sleep"></use></svg>
+                    </div>
+                    <p class="font-medium text-lg text-gray-500">ยังไม่มีข้อมูลในเดือนนี้</p>
+                    <p class="text-sm mt-1">กดปุ่ม + เพิ่มรายการ เพื่อเริ่มต้นบันทึกได้เลย</p>
+                </div>
+            </div>
+
+            <!-- VIEW: ALLOCATION -->
+            <div id="view-allocation" class="tab-content hidden glass-card p-6">
+                <h2 class="text-xl font-bold text-gray-700 mb-6">จัดสรรงบประมาณ (ร้อยละของรายรับ)</h2>
+                <p class="text-sm text-gray-500 mb-6">กำหนดสัดส่วนการใช้เงินจากรายรับที่คาดการณ์เพื่อวางแผนล่วงหน้า</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4" id="allocation-sliders">
+                        <!-- Sliders populated by JS -->
+                    </div>
+                    <div class="bg-white/40 rounded-2xl p-6 flex flex-col justify-center items-center text-center shadow-inner">
+                        <h3 class="text-gray-500 font-medium mb-2">รายรับที่ตั้งงบไว้รวม</h3>
+                        <p class="text-2xl font-bold text-gray-800" id="alloc-total-income">฿0.00</p>
+                        
+                        <div class="w-full h-px bg-gray-200 my-6"></div>
+                        
+                        <h3 class="text-gray-500 font-medium mb-2">จัดสรรไปแล้ว</h3>
+                        <p class="text-3xl font-bold text-coral-glow mb-1" id="alloc-percentage">0%</p>
+                        <p class="text-sm text-gray-400">คงเหลือ <span id="alloc-remaining-percent">100%</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: TRANSACTIONS -->
+            <div id="view-transactions" class="tab-content hidden glass-card p-6">
+                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <h2 class="text-xl font-bold text-gray-700">รายการธุรกรรมทั้งหมด</h2>
+                    <div class="flex gap-2">
+                        <select id="filter-type" class="bg-white/50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-sky-blue focus:border-sky-blue block p-2 outline-none" onchange="renderTransactions()">
+                            <option value="all">ทุกประเภท</option>
+                            <option value="income">รายรับ</option>
+                            <option value="expense">รายจ่าย</option>
+                            <option value="bill">บิล</option>
+                            <option value="saving">เงินออม</option>
+                            <option value="debt">หนี้สิน</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
+                        <thead class="text-xs uppercase bg-sky-blue/10">
+                            <tr>
+                                <th class="px-4 py-3 rounded-tl-lg">วันที่</th>
+                                <th class="px-4 py-3">ประเภท</th>
+                                <th class="px-4 py-3">หมวดหมู่/ชื่อรายการ</th>
+                                <th class="px-4 py-3 text-right">จำนวนเงินจริง</th>
+                                <th class="px-4 py-3 text-right rounded-tr-lg">งบประมาณ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-body" class="divide-y divide-gray-100/50">
+                            <!-- JS populates -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Global Add/Edit Item Modal -->
+    <div id="itemModal" class="modal-overlay fixed inset-0 z-[60] flex items-center justify-center p-4">
+        <div class="modal-content glass-card w-full max-w-lg p-6 relative mt-10"> <!-- เพิ่ม mt เพื่อเว้นที่ให้ตัวละครเกาะ -->
+            
+            <!-- ตัวละครเกาะขอบหน้าต่าง Modal -->
+            <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 w-20 h-20 anim-pop z-20 drop-shadow-lg">
+                <svg class="w-full h-full"><use href="#mascot-main"></use></svg>
+            </div>
+
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-tomato-jam text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-50 transition z-10">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <h2 class="text-2xl font-bold text-gray-800 mb-6" id="modalTitle">เพิ่มรายการใหม่</h2>
+            
+            <form id="itemForm" onsubmit="saveItem(event)">
+                <input type="hidden" id="itemId">
+                
+                <!-- Type Selection (Only shown on Add) -->
+                <div class="mb-4" id="typeContainer">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ประเภทรายการ <span class="text-tomato-jam">*</span></label>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="itemType" value="income" class="peer sr-only" checked onchange="updateFormFields()">
+                            <div class="text-center py-2 px-1 rounded-lg border border-gray-200 peer-checked:bg-soft-peach peer-checked:border-coral-glow peer-checked:text-coral-glow text-xs transition">
+                                <i class="fas fa-arrow-down block mb-1"></i> รายรับ
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="itemType" value="expense" class="peer sr-only" onchange="updateFormFields()">
+                            <div class="text-center py-2 px-1 rounded-lg border border-gray-200 peer-checked:bg-coral-glow/20 peer-checked:border-coral-glow peer-checked:text-coral-glow text-xs transition">
+                                <i class="fas fa-arrow-up block mb-1"></i> รายจ่าย
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="itemType" value="bill" class="peer sr-only" onchange="updateFormFields()">
+                            <div class="text-center py-2 px-1 rounded-lg border border-gray-200 peer-checked:bg-sky-blue/20 peer-checked:border-sky-blue peer-checked:text-sky-blue text-xs transition">
+                                <i class="fas fa-file-invoice block mb-1"></i> บิล
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="itemType" value="saving" class="peer sr-only" onchange="updateFormFields()">
+                            <div class="text-center py-2 px-1 rounded-lg border border-gray-200 peer-checked:bg-honeydew peer-checked:border-soft-peach peer-checked:text-sky-blue text-xs transition">
+                                <i class="fas fa-piggy-bank block mb-1"></i> ออม
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="itemType" value="debt" class="peer sr-only" onchange="updateFormFields()">
+                            <div class="text-center py-2 px-1 rounded-lg border border-gray-200 peer-checked:bg-tomato-jam/10 peer-checked:border-tomato-jam peer-checked:text-tomato-jam text-xs transition">
+                                <i class="fas fa-credit-card block mb-1"></i> หหนี้
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">วันที่ทำรายการ <span class="text-tomato-jam">*</span></label>
+                        <input type="date" id="itemDate" required class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg focus:ring-sky-blue focus:border-sky-blue p-2 outline-none">
+                    </div>
+                    <div id="dueDateContainer" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">วันครบกำหนดชำระ</label>
+                        <input type="date" id="itemDueDate" class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg focus:ring-sky-blue focus:border-sky-blue p-2 outline-none">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อรายการ <span class="text-tomato-jam">*</span></label>
+                    <input type="text" id="itemName" required placeholder="เช่น เงินเดือน, ค่าเน็ต, กินข้าว" class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg focus:ring-sky-blue focus:border-sky-blue p-2 outline-none">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">หมวดหมู่ <span class="text-tomato-jam">*</span></label>
+                    <select id="itemCategory" required class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg focus:ring-sky-blue focus:border-sky-blue p-2 outline-none">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ยอดเงินจริง (Actual) <span class="text-tomato-jam">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">฿</div>
+                            <input type="number" id="itemActual" step="0.01" min="0" required class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg focus:ring-sky-blue focus:border-sky-blue p-2 pl-8 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">งบประมาณ (Budget)</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">฿</div>
+                            <input type="number" id="itemBudget" step="0.01" min="0" class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg focus:ring-sky-blue focus:border-sky-blue p-2 pl-8 outline-none" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">หมายเหตุ</label>
+                    <input type="text" id="itemNote" placeholder="ข้อมูลเพิ่มเติม..." class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg focus:ring-sky-blue focus:border-sky-blue p-2 outline-none">
+                </div>
+
+                <div class="flex gap-3 justify-end">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition">ยกเลิก</button>
+                    <button type="submit" class="btn-glossy px-6 py-2.5 font-medium flex items-center gap-2" onclick="playCheerAnim()">
+                        <i class="fas fa-save"></i> บันทึก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification (มีน้อง Budgee ดีใจ) -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-[70] bg-white/90 backdrop-blur-md text-gray-700 px-6 py-3 rounded-2xl shadow-xl border-2 border-coral-glow flex items-center gap-4">
+        <div class="w-12 h-12 anim-pop" id="toast-mascot">
+            <svg class="w-full h-full"><use href="#mascot-cheer"></use></svg>
+        </div>
+        <div>
+            <span id="toastMsg" class="font-bold text-coral-glow block">สำเร็จ!</span>
+            <span class="text-sm font-medium text-gray-600">บันทึกข้อมูลเรียบร้อยแล้ว</span>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration & Categories ---
+        const CATEGORIES = {
+            income: ['เงินเดือน', 'ธุรกิจส่วนตัว', 'โบนัส', 'ดอกเบี้ย/ปันผล', 'อื่นๆ'],
+            expense: ['ความงาม', 'ความบันเทิง', 'เสื้อผ้า', 'รับประทานอาหารนอกบ้าน', 'การศึกษา', 'ค่าเดินทางและน้ำมัน', 'อุปกรณ์และของใช้', 'ของกินของใช้', 'สุขภาพ', 'งานอดิเรก', 'ค่าใช้จ่ายในบ้าน', 'สัตว์เลี้ยง', 'การพัฒนาตนเอง', 'ช้อปปิ้ง', 'อื่นๆ'],
+            bill: ['ค่าไฟฟ้า', 'ค่าน้ำ', 'ค่าอินเทอร์เน็ต', 'ค่าโทรศัพท์', 'ค่าสมัครสมาชิก', 'ค่าบัตรเครดิต', 'ค่าประกัน', 'ค่าเช่าบ้าน', 'อื่นๆ'],
+            saving: ['เงินลงทุน', 'กองทุนรวม', 'อสังหาริมทรัพย์', 'หุ้น', 'เงินฝากประจำ', 'อื่นๆ'],
+            debt: ['เงินกู้ยืม', 'หนี้บัตรเครดิต', 'ผ่อนรถ', 'ผ่อนบ้าน', 'อื่นๆ']
+        };
+
+        const TAB_TITLES = {
+            dashboard: 'ภาพรวมการเงิน',
+            income: 'รายรับ',
+            expenses: 'รายจ่าย',
+            bills: 'บิลและค่าใช้จ่ายประจำ',
+            savings: 'เงินออม',
+            debts: 'หนี้สิน',
+            allocation: 'จัดสรรงบประมาณ',
+            transactions: 'รายการธุรกรรมทั้งหมด'
+        };
+
+        // --- State Management ---
+        let currentTab = 'dashboard';
+        let currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+        let state = {
+            prevBalance: 0,
+            transactions: [],
+            allocations: {
+                expense: 50,
+                saving: 20,
+                bill: 20,
+                debt: 10
+            }
+        };
+
+        // --- Chart Instances ---
+        let charts = {};
+
+        // --- Initialization ---
+        window.onload = () => {
+            // Set input month
+            document.getElementById('monthSelector').value = currentMonth;
+            
+            // Initialize UI with empty data
+            updateData();
+        };
+
+        // --- UI Interactions ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.getElementById('pageTitle').textContent = TAB_TITLES[tabId];
+            
+            // Update active state on nav
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Hide all views
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show requested view
+            if (['income', 'expenses', 'bills', 'savings', 'debts'].includes(tabId)) {
+                document.getElementById('view-generic').classList.remove('hidden');
+                
+                // สลับภาพประกอบประจำหมวดหมู่ด้วย
+                const typeMap = { 'income': 'income', 'expenses': 'expense', 'bills': 'bill', 'savings': 'saving', 'debts': 'debt' };
+                document.getElementById('generic-illus').innerHTML = `<use href="#illus-${typeMap[tabId]}"></use>`;
+                
+                renderGenericTable(tabId);
+            } else {
+                document.getElementById(`view-${tabId}`).classList.remove('hidden');
+                if (tabId === 'dashboard') renderDashboard();
+                if (tabId === 'transactions') renderTransactions();
+                if (tabId === 'allocation') renderAllocation();
+            }
+
+            // Close sidebar on mobile
+            if (window.innerWidth < 1024) toggleSidebar();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            
+            // รีเซ็ตแอนิเมชันของมาสคอตดีใจใน Toast
+            const mascot = document.getElementById('toast-mascot');
+            mascot.classList.remove('anim-pop');
+            void mascot.offsetWidth; // trigger reflow
+            mascot.classList.add('anim-pop');
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500); // ให้นานขึ้นนิดนึงเพื่อให้เห็นตัวละคร
+        }
+
+        // --- เล่นแอนิเมชันปุ่มตอนกดบันทึก (ทางเลือก) ---
+        function playCheerAnim() {
+            // ฟังก์ชันเสริมถ้าต้องการลูกเล่นเพิ่มเติมตอนกดปุ่ม
+        }
+
+        // --- Modal Logic ---
+        function openModal(id = null) {
+            const modal = document.getElementById('itemModal');
+            const form = document.getElementById('itemForm');
+            form.reset();
+            document.getElementById('itemId').value = '';
+            
+            // Default to today in current selected month
+            let defaultDate = new Date();
+            if(defaultDate.toISOString().slice(0,7) !== currentMonth) {
+                defaultDate = new Date(currentMonth + '-01');
+            }
+            document.getElementById('itemDate').value = defaultDate.toISOString().split('T')[0];
+            
+            if (id) {
+                document.getElementById('modalTitle').textContent = 'แก้ไขรายการ';
+                document.getElementById('typeContainer').classList.add('hidden'); // Hide type selection on edit
+                const item = state.transactions.find(t => t.id === id);
+                if (item) {
+                    document.getElementById('itemId').value = item.id;
+                    document.querySelector(`input[name="itemType"][value="${item.type}"]`).checked = true;
+                    document.getElementById('itemDate').value = item.date;
+                    document.getElementById('itemName').value = item.name;
+                    document.getElementById('itemActual').value = item.actual;
+                    document.getElementById('itemBudget').value = item.budget || 0;
+                    document.getElementById('itemNote').value = item.note || '';
+                    if (item.type === 'bill') {
+                        document.getElementById('itemDueDate').value = item.dueDate || '';
+                    }
+                    updateFormFields();
+                    document.getElementById('itemCategory').value = item.category;
+                }
+            } else {
+                document.getElementById('modalTitle').textContent = 'เพิ่มรายการใหม่';
+                document.getElementById('typeContainer').classList.remove('hidden');
+                document.querySelector('input[name="itemType"][value="expense"]').checked = true; // default
+                updateFormFields();
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('itemModal').classList.remove('active');
+        }
+
+        function updateFormFields() {
+            const type = document.querySelector('input[name="itemType"]:checked').value;
+            const catSelect = document.getElementById('itemCategory');
+            const dueContainer = document.getElementById('dueDateContainer');
+            
+            // Populate categories
+            catSelect.innerHTML = CATEGORIES[type].map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            // Toggle Due Date for Bills
+            if (type === 'bill') {
+                dueContainer.classList.remove('hidden');
+            } else {
+                dueContainer.classList.add('hidden');
+            }
+        }
+
+        function saveItem(e) {
+            e.preventDefault();
+            const id = document.getElementById('itemId').value;
+            const type = document.querySelector('input[name="itemType"]:checked').value;
+            const date = document.getElementById('itemDate').value;
+            
+            // Validate month matches (optional, but good for UX)
+            const itemMonth = date.slice(0, 7);
+            
+            const newItem = {
+                id: id || 'id_' + Date.now(),
+                type: type,
+                month: itemMonth,
+                date: date,
+                name: document.getElementById('itemName').value,
+                category: document.getElementById('itemCategory').value,
+                actual: parseFloat(document.getElementById('itemActual').value) || 0,
+                budget: parseFloat(document.getElementById('itemBudget').value) || 0,
+                note: document.getElementById('itemNote').value,
+                isPaid: false // for bills
+            };
+
+            if (type === 'bill') {
+                newItem.dueDate = document.getElementById('itemDueDate').value;
+                // Preserve isPaid status on edit
+                if (id) {
+                    const existing = state.transactions.find(t => t.id === id);
+                    if (existing) newItem.isPaid = existing.isPaid;
+                }
+            }
+
+            if (id) {
+                const index = state.transactions.findIndex(t => t.id === id);
+                if (index > -1) state.transactions[index] = newItem;
+            } else {
+                state.transactions.push(newItem);
+            }
+            
+            // If the item's month is different, switch to that month
+            if (itemMonth !== currentMonth) {
+                currentMonth = itemMonth;
+                document.getElementById('monthSelector').value = currentMonth;
+            }
+
+            closeModal();
+            updateData();
+            showToast('บันทึกข้อมูลเรียบร้อยแล้ว');
+        }
+
+        function deleteItem(id) {
+            if(confirm('ต้องการลบรายการนี้ใช่หรือไม่?')) {
+                state.transactions = state.transactions.filter(t => t.id !== id);
+                updateData();
+                showToast('ลบรายการแล้ว');
+            }
+        }
+
+        function toggleBillPaid(id) {
+            const item = state.transactions.find(t => t.id === id);
+            if(item) {
+                item.isPaid = !item.isPaid;
+                updateData();
+            }
+        }
+
+        // --- Data Processing & Rendering ---
+
+        function getMonthData() {
+            return state.transactions.filter(t => t.month === currentMonth);
+        }
+
+        function updateData() {
+            // Update global variables
+            currentMonth = document.getElementById('monthSelector').value;
+            state.prevBalance = parseFloat(document.getElementById('prevBalance').value) || 0;
+            
+            // Re-render active view
+            if (['income', 'expenses', 'bills', 'savings', 'debts'].includes(currentTab)) {
+                renderGenericTable(currentTab);
+            } else if (currentTab === 'dashboard') {
+                renderDashboard();
+            } else if (currentTab === 'transactions') {
+                renderTransactions();
+            } else if (currentTab === 'allocation') {
+                renderAllocation();
+            }
+            
+            // Always update dashboard stats in background if on generic views to keep memory fresh
+            if(currentTab !== 'dashboard') renderDashboard(true);
+        }
+
+        function formatC(amount) {
+            return '฿' + amount.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function calculateProgress(actual, budget) {
+            if (!budget || budget === 0) return actual > 0 ? 100 : 0;
+            return Math.min(Math.round((actual / budget) * 100), 100);
+        }
+        
+        function getProgressColor(percent, type) {
+            if (type === 'income' || type === 'saving') {
+                return percent >= 100 ? 'bg-sky-blue' : 'bg-coral-glow';
+            } else { // expense, bill, debt
+                if (percent < 80) return 'bg-sky-blue';
+                if (percent < 100) return 'bg-soft-peach';
+                return 'bg-tomato-jam';
+            }
+        }
+
+        // -- Dashboard Render --
+        function renderDashboard(silent = false) {
+            const data = getMonthData();
+            
+            const sums = {
+                income: { act: state.prevBalance, bud: 0 },
+                expense: { act: 0, bud: 0 },
+                bill: { act: 0, bud: 0 },
+                saving: { act: 0, bud: 0 },
+                debt: { act: 0, bud: 0 }
+            };
+
+            data.forEach(t => {
+                if (sums[t.type]) {
+                    sums[t.type].act += t.actual;
+                    sums[t.type].bud += t.budget;
+                }
+            });
+
+            const leftToSpend = sums.income.act - (sums.expense.act + sums.bill.act + sums.saving.act + sums.debt.act);
+
+            if (!silent) {
+                // Update DOM elements
+                document.getElementById('dash-left').textContent = formatC(leftToSpend);
+                document.getElementById('dash-left').className = `text-3xl font-bold ${leftToSpend >= 0 ? 'text-sky-blue' : 'text-tomato-jam'}`;
+                
+                document.getElementById('dash-income').textContent = formatC(sums.income.act);
+                document.getElementById('dash-income-budget').textContent = formatC(sums.income.bud);
+                
+                document.getElementById('dash-expense').textContent = formatC(sums.expense.act);
+                document.getElementById('dash-expense-budget').textContent = formatC(sums.expense.bud);
+                
+                document.getElementById('dash-bill').textContent = formatC(sums.bill.act);
+                document.getElementById('dash-saving').textContent = formatC(sums.saving.act);
+                document.getElementById('dash-debt').textContent = formatC(sums.debt.act);
+
+                renderCharts(sums, data);
+            }
+        }
+
+        // -- Generic Table Render (For Income, Expense, etc.) --
+        function renderGenericTable(typeKey) {
+            // map plural to singular type for filtering
+            const typeMap = { 'income': 'income', 'expenses': 'expense', 'bills': 'bill', 'savings': 'saving', 'debts': 'debt' };
+            const singleType = typeMap[typeKey];
+            const data = getMonthData().filter(t => t.type === singleType);
+            
+            document.getElementById('generic-title').textContent = TAB_TITLES[typeKey];
+            
+            let actTotal = 0, budTotal = 0;
+            data.forEach(t => { actTotal += t.actual; budTotal += t.budget; });
+            
+            // Income includes prev balance in total
+            if (singleType === 'income') actTotal += state.prevBalance;
+
+            document.getElementById('generic-actual-total').textContent = formatC(actTotal);
+            document.getElementById('generic-budget-total').textContent = formatC(budTotal);
+
+            const tbody = document.getElementById('generic-table-body');
+            const thead = document.getElementById('generic-table-head');
+            
+            // Build Headers
+            let headers = `<th class="px-4 py-3 rounded-tl-lg">วันที่</th>`;
+            if (singleType === 'bill') headers += `<th class="px-4 py-3 text-center">สถานะ</th>`;
+            headers += `
+                <th class="px-4 py-3">หมวดหมู่</th>
+                <th class="px-4 py-3">ชื่อรายการ</th>
+                <th class="px-4 py-3 text-right">ยอดจริง</th>
+                <th class="px-4 py-3 text-right">งบประมาณ</th>
+                <th class="px-4 py-3 w-32">ความคืบหน้า</th>
+                <th class="px-4 py-3 text-center rounded-tr-lg">จัดการ</th>
+            `;
+            thead.innerHTML = headers;
+
+            if (data.length === 0) {
+                tbody.innerHTML = '';
+                document.getElementById('generic-empty').classList.remove('hidden');
+            } else {
+                document.getElementById('generic-empty').classList.add('hidden');
+                tbody.innerHTML = data.sort((a,b) => new Date(b.date) - new Date(a.date)).map(t => {
+                    const percent = calculateProgress(t.actual, t.budget);
+                    const pColor = getProgressColor(percent, singleType);
+                    
+                    let row = `<tr>`;
+                    row += `<td class="px-4 py-3">${t.date}</td>`;
+                    
+                    if (singleType === 'bill') {
+                        row += `<td class="px-4 py-3 text-center">
+                            <input type="checkbox" ${t.isPaid ? 'checked' : ''} onchange="toggleBillPaid('${t.id}')" class="w-5 h-5 text-sky-blue rounded focus:ring-sky-blue cursor-pointer">
+                        </td>`;
+                    }
+                    
+                    row += `
+                        <td class="px-4 py-3"><span class="bg-honeydew border border-soft-peach px-2 py-1 rounded text-xs text-sky-blue">${t.category}</span></td>
+                        <td class="px-4 py-3 font-medium text-gray-800">${t.name}
+                            ${t.note ? `<br><span class="text-xs text-gray-400 font-normal">${t.note}</span>` : ''}
+                        </td>
+                        <td class="px-4 py-3 text-right font-semibold ${t.actual > t.budget && t.budget > 0 && singleType !== 'income' && singleType !== 'saving' ? 'text-tomato-jam' : ''}">${formatC(t.actual)}</td>
+                        <td class="px-4 py-3 text-right text-gray-500 hidden sm:table-cell">${formatC(t.budget)}</td>
+                        <td class="px-4 py-3 hidden md:table-cell">
+                            <div class="flex items-center gap-2">
+                                <div class="w-full bg-soft-peach/40 rounded-full h-2">
+                                    <div class="${pColor} h-2 rounded-full progress-bar" style="width: ${percent}%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500 w-8 text-right">${percent}%</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="openModal('${t.id}')" class="text-sky-blue hover:bg-sky-blue/10 p-2 rounded-lg transition"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem('${t.id}')" class="text-tomato-jam hover:bg-tomato-jam/10 p-2 rounded-lg transition ml-1"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+                    return row;
+                }).join('');
+            }
+        }
+
+        // -- Transactions Master List --
+        function renderTransactions() {
+            const filter = document.getElementById('filter-type').value;
+            let data = getMonthData();
+            if (filter !== 'all') {
+                data = data.filter(t => t.type === filter);
+            }
+            
+            const typeLabels = { income: 'รายรับ', expense: 'รายจ่าย', bill: 'บิล', saving: 'เงินออม', debt: 'หนี้สิน' };
+            const typeColors = { income: 'text-sky-blue', expense: 'text-coral-glow', bill: 'text-soft-peach', saving: 'text-sky-blue', debt: 'text-tomato-jam' };
+
+            const tbody = document.getElementById('transactions-body');
+            tbody.innerHTML = data.sort((a,b) => new Date(b.date) - new Date(a.date)).map(t => `
+                <tr>
+                    <td class="px-4 py-3">${t.date}</td>
+                    <td class="px-4 py-3 font-medium ${typeColors[t.type]}">${typeLabels[t.type]}</td>
+                    <td class="px-4 py-3">
+                        <span class="text-xs bg-honeydew border border-soft-peach text-sky-blue px-1.5 py-0.5 rounded mr-1">${t.category}</span>
+                        ${t.name}
+                    </td>
+                    <td class="px-4 py-3 text-right font-semibold">${formatC(t.actual)}</td>
+                    <td class="px-4 py-3 text-right text-gray-500">${formatC(t.budget)}</td>
+                </tr>
+            `).join('');
+            
+            if(data.length === 0) tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-400">ไม่มีข้อมูล</td></tr>`;
+        }
+
+        // -- Budget Allocation --
+        function renderAllocation() {
+            // Calculate total expected income (Budget income + prev balance)
+            const incomeBudgets = getMonthData().filter(t => t.type === 'income').reduce((sum, t) => sum + t.budget, 0);
+            const totalIncomeBudget = incomeBudgets + state.prevBalance;
+            
+            document.getElementById('alloc-total-income').textContent = formatC(totalIncomeBudget);
+            
+            const container = document.getElementById('allocation-sliders');
+            const types = [
+                { id: 'expense', name: 'รายจ่ายทั่วไป', color: 'coral-glow' },
+                { id: 'saving', name: 'เงินออม', color: 'sky-blue' },
+                { id: 'bill', name: 'ค่าบิลต่างๆ', color: 'soft-peach' },
+                { id: 'debt', name: 'หนี้สิน', color: 'tomato-jam' }
+            ];
+
+            let totalPercent = 0;
+            types.forEach(t => totalPercent += state.allocations[t.id]);
+
+            container.innerHTML = types.map(t => {
+                const amount = (totalIncomeBudget * state.allocations[t.id]) / 100;
+                return `
+                <div class="bg-white/50 p-4 rounded-xl border border-gray-100">
+                    <div class="flex justify-between mb-1">
+                        <span class="font-medium text-gray-700">${t.name}</span>
+                        <span class="text-sm text-gray-500">${state.allocations[t.id]}%</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="${state.allocations[t.id]}" 
+                           oninput="updateAllocation('${t.id}', this.value)"
+                           class="w-full h-2 bg-honeydew border border-soft-peach rounded-lg appearance-none cursor-pointer accent-${t.color}">
+                    <div class="text-right mt-1 text-sm font-bold text-gray-700">${formatC(amount)}</div>
+                </div>
+            `}).join('');
+
+            document.getElementById('alloc-percentage').textContent = `${totalPercent}%`;
+            document.getElementById('alloc-percentage').className = `text-3xl font-bold mb-1 ${totalPercent > 100 ? 'text-tomato-jam' : 'text-coral-glow'}`;
+            document.getElementById('alloc-remaining-percent').textContent = `${100 - totalPercent}%`;
+        }
+
+        function updateAllocation(id, val) {
+            state.allocations[id] = parseInt(val);
+            renderAllocation();
+        }
+
+        // --- Charts Setup ---
+        function renderCharts(sums, data) {
+            // Colors matching CSS variables
+            const cSky = '#62C4DA';
+            const cPeach = '#FFDE96';
+            const cCoral = '#FA855A';
+            const cTomato = '#C93638';
+            const cHoneydew = '#F6FFEA';
+
+            // 1. Cashflow Doughnut
+            const ctxCash = document.getElementById('cashflowChart').getContext('2d');
+            if (charts.cashflow) charts.cashflow.destroy();
+            charts.cashflow = new Chart(ctxCash, {
+                type: 'doughnut',
+                data: {
+                    labels: ['รายจ่าย', 'บิล', 'เงินออม', 'หนี้สิน', 'คงเหลือ'],
+                    datasets: [{
+                        data: [
+                            sums.expense.act, 
+                            sums.bill.act, 
+                            sums.saving.act, 
+                            sums.debt.act, 
+                            Math.max(0, sums.income.act - (sums.expense.act + sums.bill.act + sums.saving.act + sums.debt.act))
+                        ],
+                        backgroundColor: [cCoral, cPeach, cSky, cTomato, cHoneydew],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#C93638', font: { family: 'Noto Sans Thai' } } }
+                    }
+                }
+            });
+
+            // 2. Expense Breakdown Pie
+            const expensesData = data.filter(t => t.type === 'expense' || t.type === 'bill');
+            const catSums = {};
+            expensesData.forEach(e => {
+                catSums[e.category] = (catSums[e.category] || 0) + e.actual;
+            });
+            const catLabels = Object.keys(catSums);
+            const catVals = Object.values(catSums);
+
+            // Generate pastel colors based ONLY on provided 5 colors
+            const pastelColors = [cCoral, cSky, cPeach, cTomato, cHoneydew, cCoral, cSky, cPeach, cTomato, cHoneydew, cCoral, cSky, cPeach, cTomato, cHoneydew];
+
+            const ctxExp = document.getElementById('expenseChart').getContext('2d');
+            if (charts.expense) charts.expense.destroy();
+            charts.expense = new Chart(ctxExp, {
+                type: 'pie',
+                data: {
+                    labels: catLabels.length > 0 ? catLabels : ['ไม่มีข้อมูล'],
+                    datasets: [{
+                        data: catVals.length > 0 ? catVals : [1],
+                        backgroundColor: catVals.length > 0 ? pastelColors.slice(0, catLabels.length) : ['rgba(246, 255, 234, 0.5)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false } // Hide legend to save space, rely on hover
+                    }
+                }
+            });
+
+            // 3. Budget vs Actual Bar Chart
+            const ctxBar = document.getElementById('budgetBarChart').getContext('2d');
+            if (charts.bar) charts.bar.destroy();
+            charts.bar = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['รายรับ', 'รายจ่าย', 'บิล', 'เงินออม', 'หนี้สิน'],
+                    datasets: [
+                        {
+                            label: 'ยอดจริง (Actual)',
+                            data: [sums.income.act, sums.expense.act, sums.bill.act, sums.saving.act, sums.debt.act],
+                            backgroundColor: cCoral,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'งบประมาณ (Budget)',
+                            data: [sums.income.bud, sums.expense.bud, sums.bill.bud, sums.saving.bud, sums.debt.bud],
+                            backgroundColor: cSky,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(250, 133, 90, 0.1)' } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { color: '#C93638', font: { family: 'Noto Sans Thai' } } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
